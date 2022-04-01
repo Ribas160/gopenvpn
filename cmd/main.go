@@ -10,9 +10,9 @@ import (
 )
 
 const (
-	ClientsConfigs       string = "/Applications/XAMPP/xamppfiles/htdocs/projects/myProjects/gopenvpn/clients/"
-	EasyRsa              string = "/Applications/XAMPP/xamppfiles/htdocs/projects/myProjects/gopenvpn/easy-rsa/"
-	ClientsDefaultConfig string = "/Applications/XAMPP/xamppfiles/htdocs/projects/myProjects/gopenvpn/server/client_default.ovpn"
+	ClientsConfigs       string = "/etc/openvpn/clients/"
+	EasyRsa              string = "/etc/openvpn/easy-rsa/"
+	ClientsDefaultConfig string = "/etc/openvpn/server/client_default.ovpn"
 	ConfigsPrefix        string = "client_"
 )
 
