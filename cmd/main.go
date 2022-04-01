@@ -6,8 +6,14 @@ import (
 
 	"github.com/Ribas160/gopenvpn/pkg/repository"
 	"github.com/Ribas160/gopenvpn/pkg/service"
-	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
+)
+
+const (
+	ClientsConfigs       string = "/Applications/XAMPP/xamppfiles/htdocs/projects/myProjects/gopenvpn/clients/"
+	EasyRsa              string = "/Applications/XAMPP/xamppfiles/htdocs/projects/myProjects/gopenvpn/easy-rsa/"
+	ClientsDefaultConfig string = "/Applications/XAMPP/xamppfiles/htdocs/projects/myProjects/gopenvpn/server/client_default.ovpn"
+	ConfigsPrefix        string = "client_"
 )
 
 func main() {
@@ -15,9 +21,10 @@ func main() {
 		logrus.Fatalf("Client's name is not specified")
 	}
 
-	if err := godotenv.Load(); err != nil {
-		logrus.Fatalf("Error loading env variables: %s", err.Error())
-	}
+	os.Setenv("CLIENTS_CONFIGS", ClientsConfigs)
+	os.Setenv("EASY_RSA", EasyRsa)
+	os.Setenv("CLIENT_DEFAULT_CONFIG", ClientsDefaultConfig)
+	os.Setenv("CONFIGS_PREFIX", ConfigsPrefix)
 
 	args := os.Args
 
