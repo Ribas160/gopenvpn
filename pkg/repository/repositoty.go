@@ -1,7 +1,8 @@
 package repository
 
-type ClientConfig interface {
-	Create() (string, error)
+type Client interface {
+	CreateConfig() (string, error)
+	BuildNew() error
 }
 
 type Files interface {
@@ -10,13 +11,13 @@ type Files interface {
 }
 
 type Repository struct {
-	ClientConfig
+	Client
 	Files
 }
 
 func NewRepository(c *Config) *Repository {
 	return &Repository{
-		ClientConfig: newClientConfigRepository(c),
-		Files:        newFilesRepository(),
+		Client: newClientRepository(c),
+		Files:  newFilesRepository(),
 	}
 }

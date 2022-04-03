@@ -4,22 +4,24 @@ import (
 	"github.com/Ribas160/gopenvpn/pkg/repository"
 )
 
-type ClientConfig interface {
-	Create() (string, error)
+type Client interface {
+	CreateConfig() (string, error)
+	BuildNew() error
 }
 
 type Files interface {
 	Copy(from string, to string) error
+	Read(file string) (string, error)
 }
 
 type Service struct {
-	ClientConfig
+	Client
 	Files
 }
 
 func NewServices(repos *repository.Repository) *Service {
 	return &Service{
-		ClientConfig: newClientConfigService(repos.ClientConfig),
-		Files:        newFilesService(repos.Files),
+		Client: newClientConfigService(repos.Client),
+		Files:  newFilesService(repos.Files),
 	}
 }

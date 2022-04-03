@@ -1,22 +1,24 @@
 package repository
 
 import (
+	"bytes"
 	"os"
+	"os/exec"
 	"regexp"
 	"strings"
 )
 
-type ClientConfigRepository struct {
+type ClientReposiory struct {
 	name string
 }
 
-func newClientConfigRepository(c *Config) *ClientConfigRepository {
-	return &ClientConfigRepository{
+func newClientRepository(c *Config) *ClientReposiory {
+	return &ClientReposiory{
 		name: c.Name,
 	}
 }
 
-func (r *ClientConfigRepository) Create() (string, error) {
+func (r *ClientReposiory) CreateConfig() (string, error) {
 	err := os.MkdirAll(os.Getenv("CLIENTS_CONFIGS"), os.ModePerm)
 	if err != nil {
 		return "", err
@@ -58,4 +60,19 @@ func (r *ClientConfigRepository) Create() (string, error) {
 	f.WriteString(config)
 
 	return f.Name(), nil
+}
+
+func (r *ClientReposiory) BuildNew() error {
+	cmd := exec.Command(os.Getenv("EASY_RSA")+"easyrsa", "build-client-full", r.name, "nopass")
+
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+
+	err := cmd.Run()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

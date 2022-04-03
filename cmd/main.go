@@ -18,6 +18,9 @@ const (
 
 func main() {
 	if len(os.Args) < 2 {
+		logrus.Fatalf("Command not specified")
+
+	} else if len(os.Args) < 3 {
 		logrus.Fatalf("Client's name is not specified")
 	}
 
@@ -28,7 +31,8 @@ func main() {
 
 	args := os.Args
 
-	clientName := args[1]
+	command := args[1]
+	clientName := args[2]
 
 	client := repository.NewClient(repository.Config{
 		Name: clientName,
@@ -37,7 +41,39 @@ func main() {
 	repos := repository.NewRepository(client)
 	services := service.NewServices(repos)
 
-	config, err := services.ClientConfig.Create()
+	c := &Command{
+		services: services,
+	}
+
+	if command == "build" {
+		c.buildNew(clientName)
+
+	} else if command == "config" {
+		c.createConfig()
+
+	} else {
+		logrus.Fatalf("Command " + command + "does not exists")
+	}
+}
+
+type Command struct {
+	services *service.Service
+}
+
+func (c *Command) buildNew(clientName string) {
+	err := c.services.Client.BuildNew()
+	if err != nil {
+		logrus.Fatalf(err.Error())
+	}
+
+	fmt.Printf("Key was generated: %spki/private/%s.key\n", os.Getenv("EASY_RSA"), clientName)
+	fmt.Printf("Certificate was generated: %spki/issued/%s.crt\n", os.Getenv("EASY_RSA"), clientName)
+
+	c.createConfig()
+}
+
+func (c *Command) createConfig() {
+	config, err := c.services.Client.CreateConfig()
 	if err != nil {
 		logrus.Fatalf(err.Error())
 	}

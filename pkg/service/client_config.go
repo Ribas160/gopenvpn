@@ -4,14 +4,18 @@ import (
 	"github.com/Ribas160/gopenvpn/pkg/repository"
 )
 
-type ClientConfigService struct {
-	repo repository.ClientConfig
+type ClientService struct {
+	repo repository.Client
 }
 
-func newClientConfigService(repo repository.ClientConfig) *ClientConfigService {
-	return &ClientConfigService{repo: repo}
+func newClientConfigService(repo repository.Client) *ClientService {
+	return &ClientService{repo: repo}
 }
 
-func (s *ClientConfigService) Create() (string, error) {
-	return s.repo.Create()
+func (s *ClientService) CreateConfig() (string, error) {
+	return s.repo.CreateConfig()
+}
+
+func (s *ClientService) BuildNew() error {
+	return s.repo.BuildNew()
 }

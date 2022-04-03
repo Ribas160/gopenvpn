@@ -15,3 +15,7 @@ func newFilesService(repo repository.Files) *FilesService {
 func (s *FilesService) Copy(from string, to string) error {
 	return s.repo.Copy(from, to)
 }
+
+func (s *FilesService) Read(file string) (string, error) {
+	return s.repo.Read(file)
+}
