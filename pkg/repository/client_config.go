@@ -5,7 +5,6 @@ import (
 	"os"
 	"os/exec"
 	"regexp"
-	"strings"
 )
 
 type ClientReposiory struct {
@@ -46,9 +45,14 @@ func (r *ClientReposiory) CreateConfig() (string, error) {
 		return "", err
 	}
 
-	config = strings.Replace(config, "<ca></ca>", "<ca>\n"+ca+"</ca>", -1)
-	config = strings.Replace(config, "<key></key>", "<key>\n"+key+"</key>", -1)
-	config = strings.Replace(config, "<cert></cert>", "<cert>\n"+cert+"</cert>", -1)
+	regexCa := regexp.MustCompile("(?s)<ca>.*?</ca>")
+	config = regexCa.ReplaceAllString(config, "<ca>\n"+ca+"</ca>")
+
+	regexKey := regexp.MustCompile("(?s)<key>.*?</key>")
+	config = regexKey.ReplaceAllString(config, "<key>\n"+key+"</key>")
+
+	regexCert := regexp.MustCompile("(?s)<cert>.*?</cert>")
+	config = regexCert.ReplaceAllString(config, "<cert>\n"+cert+"</cert>")
 
 	f, err := os.OpenFile(os.Getenv("CLIENTS_CONFIGS")+os.Getenv("CONFIGS_PREFIX")+r.name+".ovpn", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
